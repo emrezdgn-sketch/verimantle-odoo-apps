@@ -1,32 +1,51 @@
 <section class="mcp-listing">
 <style>
-.mcp-listing{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1d2422;line-height:1.6;max-width:980px;margin:0 auto;padding:0 16px 48px}
-.mcp-listing h1{font-size:40px;line-height:1.1;margin:0 0 16px;letter-spacing:-.01em;font-weight:700}
-.mcp-listing h2{font-size:26px;line-height:1.2;margin:48px 0 14px;font-weight:650;border-top:2px solid #16201e;padding-top:18px}
-.mcp-listing h3{font-size:18px;margin:26px 0 6px;font-weight:650}
+.mcp-listing{box-sizing:border-box;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1d2422;line-height:1.6;max-width:900px;width:100%;margin:0 auto;padding:0 16px 40px;overflow-wrap:break-word}
+.mcp-listing *{box-sizing:border-box}
+.mcp-listing h1{font-size:clamp(22px,4.2vw,30px);line-height:1.2;margin:0 0 12px;letter-spacing:-.01em;font-weight:700}
+.mcp-listing h2{font-size:clamp(18px,3vw,21px);line-height:1.25;margin:36px 0 12px;font-weight:650;border-top:2px solid #16201e;padding-top:16px}
+.mcp-listing h3{font-size:16px;margin:20px 0 6px;font-weight:650}
 .mcp-listing p{margin:0 0 14px;max-width:70ch}
-.mcp-listing .lead{font-size:20px;color:#3d4749;max-width:62ch}
-.mcp-listing .hero{background:#16201e;color:#e9eeec;border-radius:14px;padding:34px 34px 30px;margin:0 0 10px}
+.mcp-listing .lead{font-size:17px;color:#3d4749;max-width:62ch}
+.mcp-listing .hero{background:#16201e;color:#e9eeec;border-radius:12px;padding:24px 22px;margin:0 0 10px}
 .mcp-listing .hero h1{color:#fff}
-.mcp-listing .hero p{color:#c2ccc9;max-width:60ch;margin-bottom:0}
+.mcp-listing .hero p{color:#c2ccc9;max-width:60ch;margin-bottom:0;font-size:15px}
 .mcp-listing .hero strong{color:#4fbf97}
-.mcp-listing table{border-collapse:collapse;width:100%;margin:18px 0;font-size:15px}
-.mcp-listing th{text-align:left;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5a6467;border-bottom:2px solid #a9b4b2;padding:9px 12px;font-weight:600}
-.mcp-listing td{border-bottom:1px solid #d3dad9;padding:10px 12px;vertical-align:top}
-.mcp-listing td code{background:#eef2f1;padding:2px 6px;border-radius:4px;font-size:13px;white-space:nowrap}
+.mcp-listing table{border-collapse:collapse;width:100%;max-width:100%;margin:16px 0;font-size:14px;table-layout:fixed}
+.mcp-listing th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5a6467;border-bottom:2px solid #a9b4b2;padding:8px 10px;font-weight:600}
+.mcp-listing td{border-bottom:1px solid #d3dad9;padding:9px 10px;vertical-align:top;word-break:normal;overflow-wrap:break-word}
+.mcp-listing td code{background:#eef2f1;padding:2px 6px;border-radius:4px;font-size:12px;white-space:nowrap;display:inline-block;max-width:100%;overflow-wrap:break-word}
 .mcp-listing .num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
 .mcp-listing .short{color:#c8322a;font-weight:650}
 .mcp-listing .ok{color:#1f7a5c;font-weight:650}
-.mcp-listing .callout{border-left:4px solid #1f7a5c;background:#f3f8f6;padding:18px 22px;margin:22px 0;border-radius:0 8px 8px 0}
+.mcp-listing .callout{border-left:4px solid #1f7a5c;background:#f3f8f6;padding:16px 20px;margin:20px 0;border-radius:0 8px 8px 0}
 .mcp-listing .callout p:last-child{margin-bottom:0}
 .mcp-listing .warn{border-left-color:#a8700f;background:#fdf8ee}
-.mcp-listing pre{background:#16201e;color:#e9eeec;padding:16px 18px;border-radius:8px;overflow-x:auto;font-size:13px;line-height:1.5;margin:14px 0}
-.mcp-listing ul{margin:0 0 14px;padding-left:22px;max-width:70ch}
+.mcp-listing pre{background:#16201e;color:#e9eeec;padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:12.5px;line-height:1.5;margin:14px 0;max-width:100%;white-space:pre-wrap;word-break:break-word}
+.mcp-listing ul{margin:0 0 14px;padding-left:20px;max-width:70ch}
 .mcp-listing li{margin-bottom:7px}
-.mcp-listing .grid{display:flex;flex-wrap:wrap;gap:14px;margin:20px 0}
-.mcp-listing .card{flex:1 1 280px;border:1px solid #d3dad9;border-radius:10px;padding:16px 18px}
+.mcp-listing .grid{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0}
+.mcp-listing .card{flex:1 1 240px;min-width:0;border:1px solid #d3dad9;border-radius:10px;padding:14px 16px}
 .mcp-listing .card h3{margin-top:0}
-.mcp-listing .card p{font-size:14px;color:#3d4749;margin-bottom:0}
+.mcp-listing .card p{font-size:13.5px;color:#3d4749;margin-bottom:0}
+
+/* Below this width, a wide comparison table cramps into unreadable
+   columns before the browser would otherwise break words mid-letter to
+   fit them - so it becomes a set of stacked, labelled rows instead. The
+   eight-tools table gets the same treatment, since two columns of prose
+   are no more readable narrow than five columns of numbers are. */
+@media (max-width:600px){
+  .mcp-listing{padding:0 12px 32px}
+  .mcp-listing table.stack,
+  .mcp-listing table.stack thead,
+  .mcp-listing table.stack tbody,
+  .mcp-listing table.stack tr{display:block;width:100%}
+  .mcp-listing table.stack thead{display:none}
+  .mcp-listing table.stack tr{border:1px solid #d3dad9;border-radius:8px;padding:10px 12px;margin:0 0 10px}
+  .mcp-listing table.stack td{display:block;border-bottom:none;padding:4px 0;text-align:left!important}
+  .mcp-listing table.stack td.num{text-align:left}
+  .mcp-listing table.stack td::before{content:attr(data-th);display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#5a6467;font-weight:600;margin-bottom:2px}
+}
 </style>
 
 <div class="hero">
@@ -38,26 +57,30 @@
 
 <p class="lead">You have twenty plates on the shelf. Ten brackets need twenty plates. So the answer is yes &mdash; except six of those plates are already reserved for another order.</p>
 
-<table>
-  <tr><th>Component</th><th class="num">Needed</th><th class="num">On hand</th><th class="num">Reserved</th><th class="num">Free</th></tr>
-  <tr><td>Aluminium plate</td><td class="num">20</td><td class="num">20</td><td class="num">6</td><td class="num short">14</td></tr>
-  <tr><td>Fastener M6&times;25</td><td class="num">80</td><td class="num">500</td><td class="num">0</td><td class="num ok">500</td></tr>
+<table class="stack">
+  <thead><tr><th>Component</th><th class="num">Needed</th><th class="num">On hand</th><th class="num">Reserved</th><th class="num">Free</th></tr></thead>
+  <tbody>
+  <tr><td data-th="Component">Aluminium plate</td><td class="num" data-th="Needed">20</td><td class="num" data-th="On hand">20</td><td class="num" data-th="Reserved">6</td><td class="num short" data-th="Free">14</td></tr>
+  <tr><td data-th="Component">Fastener M6&times;25</td><td class="num" data-th="Needed">80</td><td class="num" data-th="On hand">500</td><td class="num" data-th="Reserved">0</td><td class="num ok" data-th="Free">500</td></tr>
+  </tbody>
 </table>
 
 <p>A connector that reports on-hand quantity says <em>yes, build ten</em>. This one says <strong>seven</strong>, and names the plate as the reason. That is the difference between a tool your planner trusts and one they stop asking.</p>
 
 <h2>The eight tools</h2>
 
-<table>
-  <tr><th>Tool</th><th>Answers</th></tr>
-  <tr><td><code>shortage_check</code></td><td>Can we build N of this now? If not, how many, and what is short?</td></tr>
-  <tr><td><code>stock_status</code></td><td>On hand, reserved elsewhere, and genuinely free &mdash; broken down by location.</td></tr>
-  <tr><td><code>lot_trace</code></td><td>Where is this lot, and which customers received it? Follows moves through production.</td></tr>
-  <tr><td><code>bom_explode</code></td><td>What does a quantity consist of? Kits expanded, a component reached twice counted once.</td></tr>
-  <tr><td><code>production_order_status</code></td><td>State, produced against ordered, dates, component availability.</td></tr>
-  <tr><td><code>production_backlog</code></td><td>What should we look at today? Open orders by priority and date.</td></tr>
-  <tr><td><code>stock_move_history</code></td><td>How did this quantity get here? Completed movements, source and destination.</td></tr>
-  <tr><td><code>product_search</code></td><td>Find a product, and whether it can be manufactured or only bought.</td></tr>
+<table class="stack">
+  <thead><tr><th>Tool</th><th>Answers</th></tr></thead>
+  <tbody>
+  <tr><td data-th="Tool"><code>shortage_check</code></td><td data-th="Answers">Can we build N of this now? If not, how many, and what is short?</td></tr>
+  <tr><td data-th="Tool"><code>stock_status</code></td><td data-th="Answers">On hand, reserved elsewhere, and genuinely free &mdash; broken down by location.</td></tr>
+  <tr><td data-th="Tool"><code>lot_trace</code></td><td data-th="Answers">Where is this lot, and which customers received it? Follows moves through production.</td></tr>
+  <tr><td data-th="Tool"><code>bom_explode</code></td><td data-th="Answers">What does a quantity consist of? Kits expanded, a component reached twice counted once.</td></tr>
+  <tr><td data-th="Tool"><code>production_order_status</code></td><td data-th="Answers">State, produced against ordered, dates, component availability.</td></tr>
+  <tr><td data-th="Tool"><code>production_backlog</code></td><td data-th="Answers">What should we look at today? Open orders by priority and date.</td></tr>
+  <tr><td data-th="Tool"><code>stock_move_history</code></td><td data-th="Answers">How did this quantity get here? Completed movements, source and destination.</td></tr>
+  <tr><td data-th="Tool"><code>product_search</code></td><td data-th="Answers">Find a product, and whether it can be manufactured or only bought.</td></tr>
+  </tbody>
 </table>
 
 <h2>Built so the answers stay honest</h2>
