@@ -1,6 +1,6 @@
 <section class="mcp-listing">
 <style>
-.mcp-listing{box-sizing:border-box;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1d2422;line-height:1.6;max-width:900px;width:100%;margin:0 auto;padding:0 16px 40px;overflow-wrap:break-word}
+.mcp-listing{container-type:inline-size;container-name:mcp-listing;box-sizing:border-box;font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1d2422;line-height:1.6;max-width:900px;width:100%;margin:0 auto;padding:0 16px 40px;overflow-wrap:break-word}
 .mcp-listing *{box-sizing:border-box}
 .mcp-listing h1{font-size:clamp(22px,4.2vw,30px);line-height:1.2;margin:0 0 12px;letter-spacing:-.01em;font-weight:700}
 .mcp-listing h2{font-size:clamp(18px,3vw,21px);line-height:1.25;margin:36px 0 12px;font-weight:650;border-top:2px solid #16201e;padding-top:16px}
@@ -32,15 +32,10 @@
    live page while the same markup rendered fine in an isolated test. */
 
 /* Mobile-first and !important-guarded on purpose: this is the
-   UNCONDITIONAL default, not something reached only if a max-width media
-   query happens to match. A host page can report an effective CSS width
-   wider than the physical viewport (no <meta viewport> under its
-   control, host-level zoom/scale handling), which silently defeats a
-   max-width query - as happened here. Starting stacked and *upgrading*
-   to columns at a confirmed min-width is safe either way: if the
-   min-width query never matches, the fallback is still stacked, never
-   cramped. !important defeats the host page's own table/card rules,
-   which is the specific failure being fixed. */
+   UNCONDITIONAL default, not something reached only until the container
+   query below actually matches. !important defeats the host page's own
+   table/card rules (Bootstrap ships sitewide on the Odoo Apps storefront),
+   which is the specific failure this guards against. */
 .mcp-listing table.mcp-table{display:block!important;width:100%!important;border-collapse:collapse;margin:16px 0;font-size:14px}
 .mcp-listing table.mcp-table thead{display:none!important}
 .mcp-listing table.mcp-table tbody{display:block!important;width:100%!important}
@@ -54,8 +49,29 @@
 .mcp-listing .vm-card h3{margin-top:0}
 .mcp-listing .vm-card p{font-size:13.5px;color:#3d4749;margin-bottom:0}
 
-@media (min-width:641px){
-  .mcp-listing table.mcp-table{table-layout:fixed}
+/* A prior fix upgraded to table/grid layout on a viewport min-width media
+   query. Live Odoo Apps mobile screenshots showed the host still reports
+   an effective viewport width wide enough to cross that query on real
+   phones, so the desktop branch kept firing on mobile - a fixed 50/50
+   table split cramped the "eight tools" column, and the flex grid
+   squeezed three 240px cards into a column narrower than their content.
+
+   A viewport media query can't be trusted here because it measures the
+   WRONG thing: the host window, not the actual width this description
+   is laid out in (apps.odoo.com wraps it in its own columns/gutters, so
+   the real content width is consistently narrower than the viewport -
+   confirmed 516px of real width at a 660px viewport, 900px of real width
+   at a 1000px viewport, in this store's layout). A container query fixes
+   that by measuring `.mcp-listing`'s own rendered inline size instead,
+   which is accurate regardless of what the host reports or how it wraps
+   this element. 480px is comfortably below the narrowest confirmed real
+   desktop width (516px) and comfortably above the widest confirmed real
+   mobile width (~360px), so it cannot flip on a phone the way the media
+   query did. table-layout is left as the browser default (auto) rather
+   than fixed here, so the two-column tools table sizes its "Tool" column
+   to the short code chip instead of forcing an even 50/50 split. */
+@container mcp-listing (min-width:480px){
+  .mcp-listing table.mcp-table{display:table!important;width:100%!important}
   .mcp-listing table.mcp-table thead{display:table-header-group!important}
   .mcp-listing table.mcp-table tbody{display:table-row-group!important}
   .mcp-listing table.mcp-table tr{display:table-row!important;width:auto!important;border:0!important;border-radius:0!important;padding:0!important;margin:0!important;background:none}
@@ -63,8 +79,15 @@
   .mcp-listing table.mcp-table td.num{text-align:right!important}
   .mcp-listing table.mcp-table td::before{display:none!important}
 
+  /* flex-basis 200, not 240: at the narrowest confirmed real desktop
+     width (516px container, 484px content) two 240px cards plus the 12px
+     gap need 492px - 8px more than is actually there - so they never
+     sit side by side and the grid silently stays one-per-row even though
+     the query matched. 200px clears that with room to spare (2*200+12 =
+     412 <= 484) while still giving three per row at the wider ~868px
+     content width this store renders at a 1000px viewport. */
   .mcp-listing .vm-grid{display:flex!important;flex-wrap:wrap;gap:12px}
-  .mcp-listing .vm-card{display:block!important;flex:1 1 240px!important;width:auto!important;min-width:0;margin-bottom:0}
+  .mcp-listing .vm-card{display:block!important;flex:1 1 200px!important;width:auto!important;min-width:0;margin-bottom:0}
 }
 </style>
 
