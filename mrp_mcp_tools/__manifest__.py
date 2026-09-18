@@ -2,7 +2,7 @@
 {
     # Max 25 characters, no adjectives, no company name - store rule.
     "name": "Manufacturing MCP Tools",
-    "version": "19.0.0.1.0",
+    "version": "19.0.0.1.1",
     "category": "Supply Chain/Manufacturing",
     "summary": "Let AI agents read stock, lots, BOMs and shortages. Read-only.",
 

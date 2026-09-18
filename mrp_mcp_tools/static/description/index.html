@@ -6,16 +6,14 @@
 .mcp-listing h2{font-size:clamp(18px,3vw,21px);line-height:1.25;margin:36px 0 12px;font-weight:650;border-top:2px solid #16201e;padding-top:16px}
 .mcp-listing h3{font-size:16px;margin:20px 0 6px;font-weight:650}
 .mcp-listing p{margin:0 0 14px;max-width:70ch}
-.mcp-listing .lead{font-size:17px;color:#3d4749;max-width:62ch}
+.mcp-listing .vm-lead{font-size:17px;color:#3d4749;max-width:62ch}
 .mcp-listing .hero{background:#16201e;color:#e9eeec;border-radius:12px;padding:24px 22px;margin:0 0 10px}
 .mcp-listing .hero h1{color:#fff}
 .mcp-listing .hero p{color:#c2ccc9;max-width:60ch;margin-bottom:0;font-size:15px}
 .mcp-listing .hero strong{color:#4fbf97}
-.mcp-listing table{border-collapse:collapse;width:100%;max-width:100%;margin:16px 0;font-size:14px;table-layout:fixed}
 .mcp-listing th{text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:#5a6467;border-bottom:2px solid #a9b4b2;padding:8px 10px;font-weight:600}
-.mcp-listing td{border-bottom:1px solid #d3dad9;padding:9px 10px;vertical-align:top;word-break:normal;overflow-wrap:break-word}
 .mcp-listing td code{background:#eef2f1;padding:2px 6px;border-radius:4px;font-size:12px;white-space:nowrap;display:inline-block;max-width:100%;overflow-wrap:break-word}
-.mcp-listing .num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.mcp-listing .num{font-variant-numeric:tabular-nums;white-space:nowrap}
 .mcp-listing .short{color:#c8322a;font-weight:650}
 .mcp-listing .ok{color:#1f7a5c;font-weight:650}
 .mcp-listing .callout{border-left:4px solid #1f7a5c;background:#f3f8f6;padding:16px 20px;margin:20px 0;border-radius:0 8px 8px 0}
@@ -24,27 +22,49 @@
 .mcp-listing pre{background:#16201e;color:#e9eeec;padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:12.5px;line-height:1.5;margin:14px 0;max-width:100%;white-space:pre-wrap;word-break:break-word}
 .mcp-listing ul{margin:0 0 14px;padding-left:20px;max-width:70ch}
 .mcp-listing li{margin-bottom:7px}
-.mcp-listing .grid{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0}
-.mcp-listing .card{flex:1 1 240px;min-width:0;border:1px solid #d3dad9;border-radius:10px;padding:14px 16px}
-.mcp-listing .card h3{margin-top:0}
-.mcp-listing .card p{font-size:13.5px;color:#3d4749;margin-bottom:0}
 
-/* Below this width, a wide comparison table cramps into unreadable
-   columns before the browser would otherwise break words mid-letter to
-   fit them - so it becomes a set of stacked, labelled rows instead. The
-   eight-tools table gets the same treatment, since two columns of prose
-   are no more readable narrow than five columns of numbers are. */
-@media (max-width:600px){
-  .mcp-listing{padding:0 12px 32px}
-  .mcp-listing table.stack,
-  .mcp-listing table.stack thead,
-  .mcp-listing table.stack tbody,
-  .mcp-listing table.stack tr{display:block;width:100%}
-  .mcp-listing table.stack thead{display:none}
-  .mcp-listing table.stack tr{border:1px solid #d3dad9;border-radius:8px;padding:10px 12px;margin:0 0 10px}
-  .mcp-listing table.stack td{display:block;border-bottom:none;padding:4px 0;text-align:left!important}
-  .mcp-listing table.stack td.num{text-align:left}
-  .mcp-listing table.stack td::before{content:attr(data-th);display:block;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#5a6467;font-weight:600;margin-bottom:2px}
+/* Renamed away from .table/.grid/.card: those are Bootstrap component
+   class names, and the Odoo Apps storefront ships Bootstrap sitewide.
+   A same-named global rule (e.g. Bootstrap's own .card, with its own
+   display/overflow behaviour) can beat a single-class selector like
+   ".mcp-listing .card" and silently break the layout - which is what
+   produced "only thin vertical card borders, content disappears" on the
+   live page while the same markup rendered fine in an isolated test. */
+
+/* Mobile-first and !important-guarded on purpose: this is the
+   UNCONDITIONAL default, not something reached only if a max-width media
+   query happens to match. A host page can report an effective CSS width
+   wider than the physical viewport (no <meta viewport> under its
+   control, host-level zoom/scale handling), which silently defeats a
+   max-width query - as happened here. Starting stacked and *upgrading*
+   to columns at a confirmed min-width is safe either way: if the
+   min-width query never matches, the fallback is still stacked, never
+   cramped. !important defeats the host page's own table/card rules,
+   which is the specific failure being fixed. */
+.mcp-listing table.mcp-table{display:block!important;width:100%!important;border-collapse:collapse;margin:16px 0;font-size:14px}
+.mcp-listing table.mcp-table thead{display:none!important}
+.mcp-listing table.mcp-table tbody{display:block!important;width:100%!important}
+.mcp-listing table.mcp-table tr{display:block!important;width:100%!important;border:1px solid #d3dad9;border-radius:8px;padding:10px 12px;margin:0 0 10px;background:#fff}
+.mcp-listing table.mcp-table td{display:block!important;width:100%!important;border-bottom:0!important;padding:4px 0!important;text-align:left!important;vertical-align:top}
+.mcp-listing table.mcp-table td::before{content:attr(data-th);display:block!important;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#5a6467;font-weight:600;margin-bottom:2px}
+
+.mcp-listing .vm-grid{display:block!important;margin:18px 0}
+.mcp-listing .vm-card{display:block!important;width:100%!important;box-sizing:border-box!important;border:1px solid #d3dad9;border-radius:10px;padding:14px 16px;margin:0 0 12px;background:#fff}
+.mcp-listing .vm-card:last-child{margin-bottom:0}
+.mcp-listing .vm-card h3{margin-top:0}
+.mcp-listing .vm-card p{font-size:13.5px;color:#3d4749;margin-bottom:0}
+
+@media (min-width:641px){
+  .mcp-listing table.mcp-table{table-layout:fixed}
+  .mcp-listing table.mcp-table thead{display:table-header-group!important}
+  .mcp-listing table.mcp-table tbody{display:table-row-group!important}
+  .mcp-listing table.mcp-table tr{display:table-row!important;width:auto!important;border:0!important;border-radius:0!important;padding:0!important;margin:0!important;background:none}
+  .mcp-listing table.mcp-table td{display:table-cell!important;width:auto!important;border-bottom:1px solid #d3dad9!important;padding:9px 10px!important;text-align:left!important}
+  .mcp-listing table.mcp-table td.num{text-align:right!important}
+  .mcp-listing table.mcp-table td::before{display:none!important}
+
+  .mcp-listing .vm-grid{display:flex!important;flex-wrap:wrap;gap:12px}
+  .mcp-listing .vm-card{display:block!important;flex:1 1 240px!important;width:auto!important;min-width:0;margin-bottom:0}
 }
 </style>
 
@@ -55,9 +75,9 @@
 
 <h2>The answer most connectors get wrong</h2>
 
-<p class="lead">You have twenty plates on the shelf. Ten brackets need twenty plates. So the answer is yes &mdash; except six of those plates are already reserved for another order.</p>
+<p class="vm-lead">You have twenty plates on the shelf. Ten brackets need twenty plates. So the answer is yes &mdash; except six of those plates are already reserved for another order.</p>
 
-<table class="stack">
+<table class="mcp-table">
   <thead><tr><th>Component</th><th class="num">Needed</th><th class="num">On hand</th><th class="num">Reserved</th><th class="num">Free</th></tr></thead>
   <tbody>
   <tr><td data-th="Component">Aluminium plate</td><td class="num" data-th="Needed">20</td><td class="num" data-th="On hand">20</td><td class="num" data-th="Reserved">6</td><td class="num short" data-th="Free">14</td></tr>
@@ -69,7 +89,7 @@
 
 <h2>The eight tools</h2>
 
-<table class="stack">
+<table class="mcp-table">
   <thead><tr><th>Tool</th><th>Answers</th></tr></thead>
   <tbody>
   <tr><td data-th="Tool"><code>shortage_check</code></td><td data-th="Answers">Can we build N of this now? If not, how many, and what is short?</td></tr>
@@ -85,16 +105,16 @@
 
 <h2>Built so the answers stay honest</h2>
 
-<div class="grid">
-  <div class="card">
+<div class="vm-grid">
+  <div class="vm-card">
     <h3>Free stock, not shelf stock</h3>
     <p>Every quantity excludes what is already committed to other work. It reflects what can start today.</p>
   </div>
-  <div class="card">
+  <div class="vm-card">
     <h3>Every answer states its blind spots</h3>
     <p>Incoming orders, work-center capacity and lot constraints are not counted &mdash; and each answer says so, so a snapshot is not relayed as a promise.</p>
   </div>
-  <div class="card">
+  <div class="vm-card">
     <h3>Questions, not raw records</h3>
     <p>Tools shaped around what a factory asks, instead of generic record access that leaves the model guessing at your schema.</p>
   </div>
