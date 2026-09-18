@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mcp_proposal_agent,mcp.proposal agent,model_mcp_proposal,mrp_mcp_tools.group_mcp_agent,1,0,1,0
+access_mcp_proposal_reviewer,mcp.proposal reviewer,model_mcp_proposal,group_mcp_reviewer,1,1,0,0
+access_mcp_proposal_manager,mcp.proposal manager,model_mcp_proposal,group_mcp_manager,1,1,1,0
+access_mcp_tool_call_agent,mcp.tool.call agent,model_mcp_tool_call,mrp_mcp_tools.group_mcp_agent,1,0,1,0
+access_mcp_tool_call_reviewer,mcp.tool.call reviewer,model_mcp_tool_call,group_mcp_reviewer,1,0,0,0
+access_mcp_tool_call_manager,mcp.tool.call manager,model_mcp_tool_call,group_mcp_manager,1,0,0,0

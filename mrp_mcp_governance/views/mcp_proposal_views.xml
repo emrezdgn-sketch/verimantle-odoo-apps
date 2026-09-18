@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- List view: identify, requester, what, state, when. No inline
+             editing - a proposal is immutable except through its own
+             action methods, so an editable list would only invite a write
+             the model is going to refuse anyway. -->
+        <record id="view_mcp_proposal_list" model="ir.ui.view">
+            <field name="name">mcp.proposal.list</field>
+            <field name="model">mcp.proposal</field>
+            <field name="arch" type="xml">
+                <list string="Proposals" create="false" edit="false" delete="false">
+                    <field name="name"/>
+                    <field name="proposal_type"/>
+                    <field name="requested_uid"/>
+                    <field name="summary"/>
+                    <field name="state" decoration-warning="state == 'pending'"
+                           decoration-success="state == 'applied'"
+                           decoration-danger="state in ('rejected', 'failed')"
+                           decoration-muted="state == 'expired'" widget="badge"/>
+                    <field name="create_date"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form view: every field is either FROZEN_FIELDS or
+             TRANSITION_FIELDS on the model itself (see mcp_proposal.py),
+             so every field here is readonly="1". The model's own write()
+             override refuses any other path regardless of what the view
+             declares; the buttons are the only way this record changes,
+             and they call the model's existing action methods verbatim. -->
+        <record id="view_mcp_proposal_form" model="ir.ui.view">
+            <field name="name">mcp.proposal.form</field>
+            <field name="model">mcp.proposal</field>
+            <field name="arch" type="xml">
+                <form string="Proposal" create="false" delete="false">
+                    <header>
+                        <button name="action_approve" type="object" string="Approve"
+                                class="btn-primary" invisible="state != 'pending'"/>
+                        <button name="action_reject" type="object" string="Reject"
+                                invisible="state not in ('pending', 'approved')"
+                                confirm="Reject this proposal? This can be logged with a note in the chatter below."/>
+                        <button name="action_open_applied" type="object"
+                                string="Open Applied Record"
+                                invisible="state != 'applied'"/>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="pending,approved,applied"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        <group>
+                            <group string="What is being proposed">
+                                <field name="proposal_type" readonly="1"/>
+                                <field name="summary" readonly="1"/>
+                                <field name="payload" readonly="1" widget="text"/>
+                            </group>
+                            <group string="Requested">
+                                <field name="requested_uid" readonly="1"/>
+                                <field name="agent_label" readonly="1"/>
+                                <field name="agent_session" readonly="1"/>
+                                <field name="tool_call_id" readonly="1"/>
+                                <field name="expiry_date" readonly="1"/>
+                                <field name="is_expired" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Review">
+                                <field name="reviewer_uid" readonly="1"/>
+                                <field name="review_date" readonly="1"/>
+                                <field name="rejection_reason" readonly="1"
+                                       invisible="not rejection_reason"/>
+                            </group>
+                            <group string="Result" invisible="state not in ('applied', 'failed')">
+                                <field name="applied_model" readonly="1"/>
+                                <field name="applied_res_id" readonly="1"/>
+                                <field name="applied_ref" readonly="1"/>
+                                <field name="failure_reason" readonly="1"
+                                       invisible="not failure_reason"/>
+                            </group>
+                        </group>
+                    </sheet>
+                    <chatter/>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_mcp_proposal" model="ir.actions.act_window">
+            <field name="name">Proposals</field>
+            <field name="res_model">mcp.proposal</field>
+            <field name="view_mode">list,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smile">
+                    No proposals yet. An AI agent's proposals for review will
+                    appear here.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_mcp_governance_root" name="Governance"
+                  sequence="90" groups="group_mcp_reviewer"/>
+        <menuitem id="menu_mcp_proposal" name="Proposals"
+                  parent="menu_mcp_governance_root"
+                  action="action_mcp_proposal" sequence="10"
+                  groups="group_mcp_reviewer"/>
+
+    </data>
+</odoo>

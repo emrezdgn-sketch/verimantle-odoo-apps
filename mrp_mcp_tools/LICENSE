@@ -1,0 +1,8 @@
+Manufacturing MCP Tools is licensed under the GNU Lesser General Public
+License version 3 (LGPL-3).
+
+You may use, modify and redistribute it under those terms. The full text is
+at https://www.gnu.org/licenses/lgpl-3.0.html
+
+This module depends only on Odoo Community modules (mrp, stock), which are
+themselves LGPL-3, so redistribution under LGPL-3 is permitted.

@@ -1,0 +1,119 @@
+<section class="mcp-listing">
+<style>
+.mcp-listing{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1d2422;line-height:1.6;max-width:980px;margin:0 auto;padding:0 16px 48px}
+.mcp-listing h1{font-size:40px;line-height:1.1;margin:0 0 16px;letter-spacing:-.01em;font-weight:700}
+.mcp-listing h2{font-size:26px;line-height:1.2;margin:48px 0 14px;font-weight:650;border-top:2px solid #16201e;padding-top:18px}
+.mcp-listing h3{font-size:18px;margin:26px 0 6px;font-weight:650}
+.mcp-listing p{margin:0 0 14px;max-width:70ch}
+.mcp-listing .lead{font-size:20px;color:#3d4749;max-width:62ch}
+.mcp-listing .hero{background:#16201e;color:#e9eeec;border-radius:14px;padding:34px 34px 30px;margin:0 0 10px}
+.mcp-listing .hero h1{color:#fff}
+.mcp-listing .hero p{color:#c2ccc9;max-width:60ch;margin-bottom:0}
+.mcp-listing .hero strong{color:#4fbf97}
+.mcp-listing table{border-collapse:collapse;width:100%;margin:18px 0;font-size:15px}
+.mcp-listing th{text-align:left;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5a6467;border-bottom:2px solid #a9b4b2;padding:9px 12px;font-weight:600}
+.mcp-listing td{border-bottom:1px solid #d3dad9;padding:10px 12px;vertical-align:top}
+.mcp-listing td code{background:#eef2f1;padding:2px 6px;border-radius:4px;font-size:13px;white-space:nowrap}
+.mcp-listing .num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.mcp-listing .short{color:#c8322a;font-weight:650}
+.mcp-listing .ok{color:#1f7a5c;font-weight:650}
+.mcp-listing .callout{border-left:4px solid #1f7a5c;background:#f3f8f6;padding:18px 22px;margin:22px 0;border-radius:0 8px 8px 0}
+.mcp-listing .callout p:last-child{margin-bottom:0}
+.mcp-listing .warn{border-left-color:#a8700f;background:#fdf8ee}
+.mcp-listing pre{background:#16201e;color:#e9eeec;padding:16px 18px;border-radius:8px;overflow-x:auto;font-size:13px;line-height:1.5;margin:14px 0}
+.mcp-listing ul{margin:0 0 14px;padding-left:22px;max-width:70ch}
+.mcp-listing li{margin-bottom:7px}
+.mcp-listing .grid{display:flex;flex-wrap:wrap;gap:14px;margin:20px 0}
+.mcp-listing .card{flex:1 1 280px;border:1px solid #d3dad9;border-radius:10px;padding:16px 18px}
+.mcp-listing .card h3{margin-top:0}
+.mcp-listing .card p{font-size:14px;color:#3d4749;margin-bottom:0}
+</style>
+
+<div class="hero">
+  <h1>Ask your assistant what you can actually build today</h1>
+  <p>Eight read-only tools that let Claude, ChatGPT or Gemini answer real questions about stock, lots, bills of materials and shortages &mdash; served by Odoo itself, over the Model Context Protocol. <strong>Nothing here writes a record.</strong></p>
+</div>
+
+<h2>The answer most connectors get wrong</h2>
+
+<p class="lead">You have twenty plates on the shelf. Ten brackets need twenty plates. So the answer is yes &mdash; except six of those plates are already reserved for another order.</p>
+
+<table>
+  <tr><th>Component</th><th class="num">Needed</th><th class="num">On hand</th><th class="num">Reserved</th><th class="num">Free</th></tr>
+  <tr><td>Aluminium plate</td><td class="num">20</td><td class="num">20</td><td class="num">6</td><td class="num short">14</td></tr>
+  <tr><td>Fastener M6&times;25</td><td class="num">80</td><td class="num">500</td><td class="num">0</td><td class="num ok">500</td></tr>
+</table>
+
+<p>A connector that reports on-hand quantity says <em>yes, build ten</em>. This one says <strong>seven</strong>, and names the plate as the reason. That is the difference between a tool your planner trusts and one they stop asking.</p>
+
+<h2>The eight tools</h2>
+
+<table>
+  <tr><th>Tool</th><th>Answers</th></tr>
+  <tr><td><code>shortage_check</code></td><td>Can we build N of this now? If not, how many, and what is short?</td></tr>
+  <tr><td><code>stock_status</code></td><td>On hand, reserved elsewhere, and genuinely free &mdash; broken down by location.</td></tr>
+  <tr><td><code>lot_trace</code></td><td>Where is this lot, and which customers received it? Follows moves through production.</td></tr>
+  <tr><td><code>bom_explode</code></td><td>What does a quantity consist of? Kits expanded, a component reached twice counted once.</td></tr>
+  <tr><td><code>production_order_status</code></td><td>State, produced against ordered, dates, component availability.</td></tr>
+  <tr><td><code>production_backlog</code></td><td>What should we look at today? Open orders by priority and date.</td></tr>
+  <tr><td><code>stock_move_history</code></td><td>How did this quantity get here? Completed movements, source and destination.</td></tr>
+  <tr><td><code>product_search</code></td><td>Find a product, and whether it can be manufactured or only bought.</td></tr>
+</table>
+
+<h2>Built so the answers stay honest</h2>
+
+<div class="grid">
+  <div class="card">
+    <h3>Free stock, not shelf stock</h3>
+    <p>Every quantity excludes what is already committed to other work. It reflects what can start today.</p>
+  </div>
+  <div class="card">
+    <h3>Every answer states its blind spots</h3>
+    <p>Incoming orders, work-center capacity and lot constraints are not counted &mdash; and each answer says so, so a snapshot is not relayed as a promise.</p>
+  </div>
+  <div class="card">
+    <h3>Questions, not raw records</h3>
+    <p>Tools shaped around what a factory asks, instead of generic record access that leaves the model guessing at your schema.</p>
+  </div>
+</div>
+
+<h2>It cannot write. That is enforced, not promised.</h2>
+
+<p>The agent connects as a dedicated Odoo user holding read rights on thirteen models and nothing else &mdash; no create, no write, no delete on any business model. It is never given the manufacturing or inventory user groups, because those carry write and create.</p>
+
+<p>So the guarantee does not rest on this module behaving well. Point any protocol at that API key &mdash; XML-RPC, JSON-RPC, the web client &mdash; and Odoo&rsquo;s own access control refuses the write:</p>
+
+<pre>Reads   bills of materials, stock, manufacturing orders   allowed
+Writes  create order / change stock / edit BOM / delete   refused (5/5)</pre>
+
+<p>That proof ships with the module as a script you can run against your own deployment. It attempts those five writes over real RPC and exits non-zero if any of them is ever permitted, so the guarantee is checked on every deployment rather than trusted once.</p>
+
+<p><strong>Where the guarantee comes from, precisely.</strong> Two things, and it is worth being exact about which is which. Odoo&rsquo;s access control denies create, write and delete to the agent &mdash; that is the platform, and it holds against any protocol. Keeping the module&rsquo;s own code from escalating past it with <code>sudo()</code> is a rule rather than a sandbox: a static check scans the tool and endpoint source on every test run and fails the build if a privilege-escalating or writing call appears. Neither protects against someone with database or server access, who bypasses Odoo entirely.</p>
+
+<h2>Setting it up</h2>
+
+<p>The endpoint is served by Odoo. There is no companion process to install, no separate service to keep running.</p>
+
+<ul>
+  <li>Install the module.</li>
+  <li>Create the agent user and generate an Odoo API key for it.</li>
+  <li>Point your assistant at <code>/mcp</code> with that key as a bearer token.</li>
+</ul>
+
+<div class="callout">
+  <p><strong>Approvals and audit.</strong> This module reads. When you want an assistant to be able to <em>suggest</em> work &mdash; a manufacturing order, a purchase &mdash; without ever writing it, add <strong>MCP Agent Governance</strong>: proposals instead of writes, an approval queue with separation of duties, and an append-only log of every tool call including reads.</p>
+</div>
+
+<div class="callout warn">
+  <p><strong>Scope.</strong> Manufacturing, inventory and bills of materials. It does not cover quality inspection, non-conformance, first-article inspection or document control &mdash; Odoo Community has no models for those, and this module does not pretend otherwise.</p>
+</div>
+
+<h2>Requirements</h2>
+
+<ul>
+  <li>Odoo 19.0, Community or Enterprise</li>
+  <li>The <code>mrp</code> and <code>stock</code> modules</li>
+  <li>An MCP-capable assistant</li>
+</ul>
+
+</section>

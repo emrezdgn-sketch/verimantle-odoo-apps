@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="seq_mcp_proposal" model="ir.sequence">
+            <field name="name">MCP Proposal</field>
+            <field name="code">mcp.proposal</field>
+            <field name="prefix">MCP-</field>
+            <field name="padding">5</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="cron_expire_proposals" model="ir.cron">
+            <field name="name">MCP: expire stale proposals</field>
+            <field name="model_id" ref="model_mcp_proposal"/>
+            <field name="state">code</field>
+            <field name="code">model._cron_expire_stale()</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="active" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

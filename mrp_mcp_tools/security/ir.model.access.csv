@@ -1,0 +1,14 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mcp_agent_product_product,mcp agent product.product,product.model_product_product,group_mcp_agent,1,0,0,0
+access_mcp_agent_product_template,mcp agent product.template,product.model_product_template,group_mcp_agent,1,0,0,0
+access_mcp_agent_uom_uom,mcp agent uom.uom,uom.model_uom_uom,group_mcp_agent,1,0,0,0
+access_mcp_agent_stock_quant,mcp agent stock.quant,stock.model_stock_quant,group_mcp_agent,1,0,0,0
+access_mcp_agent_stock_location,mcp agent stock.location,stock.model_stock_location,group_mcp_agent,1,0,0,0
+access_mcp_agent_stock_warehouse,mcp agent stock.warehouse,stock.model_stock_warehouse,group_mcp_agent,1,0,0,0
+access_mcp_agent_stock_lot,mcp agent stock.lot,stock.model_stock_lot,group_mcp_agent,1,0,0,0
+access_mcp_agent_stock_move,mcp agent stock.move,stock.model_stock_move,group_mcp_agent,1,0,0,0
+access_mcp_agent_stock_move_line,mcp agent stock.move.line,stock.model_stock_move_line,group_mcp_agent,1,0,0,0
+access_mcp_agent_mrp_bom,mcp agent mrp.bom,mrp.model_mrp_bom,group_mcp_agent,1,0,0,0
+access_mcp_agent_mrp_bom_line,mcp agent mrp.bom.line,mrp.model_mrp_bom_line,group_mcp_agent,1,0,0,0
+access_mcp_agent_mrp_production,mcp agent mrp.production,mrp.model_mrp_production,group_mcp_agent,1,0,0,0
+access_mcp_agent_stock_picking,mcp agent stock.picking,stock.model_stock_picking,group_mcp_agent,1,0,0,0

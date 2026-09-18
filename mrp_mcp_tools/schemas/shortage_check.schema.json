@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/shortage_check.schema.json",
+  "title": "shortage_check result",
+  "description": "Answer to: can I build N units of product X right now, and if not, what am I missing? Every quantity is expressed in the unit of measure named alongside it. All figures are a snapshot taken at 'as_of' and go stale as soon as stock moves.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "as_of", "asked", "verdict", "max_buildable", "components", "limitations"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "const": "1.0"
+    },
+    "as_of": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp of the stock snapshot. Treat the answer as invalid once stock has moved."
+    },
+
+    "asked": {
+      "type": "object",
+      "description": "Echo of the resolved request, so the agent can confirm it matched the right product and bill of materials.",
+      "additionalProperties": false,
+      "required": ["product_code", "product_name", "quantity", "uom"],
+      "properties": {
+        "product_code": { "type": "string" },
+        "product_name": { "type": "string" },
+        "product_id": { "type": "integer" },
+        "quantity": { "type": "number", "exclusiveMinimum": 0 },
+        "uom": { "type": "string" },
+        "warehouse_code": { "type": ["string", "null"] },
+        "warehouse_name": { "type": ["string", "null"] },
+        "bom_code": { "type": ["string", "null"] },
+        "bom_id": { "type": ["integer", "null"] },
+        "bom_type": {
+          "type": ["string", "null"],
+          "enum": ["normal", "phantom", null],
+          "description": "'phantom' means the bill of materials is a kit and was expanded inline rather than producing a separate order."
+        }
+      }
+    },
+
+    "verdict": {
+      "type": "string",
+      "enum": ["can_build", "partial", "blocked"],
+      "description": "can_build: the full requested quantity is covered. partial: some but not all. blocked: nothing can be built, or the request could not be evaluated."
+    },
+
+    "max_buildable": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Largest quantity of the finished product that current free stock supports, rounded DOWN to the product's unit-of-measure precision. Odoo does not record whether a product is discrete, and it accepts fractional manufacturing orders, so this may legitimately be fractional: 11 components consumed 2 per assembly gives 5.5. A caller that builds whole items should floor it."
+    },
+
+    "limiting_components": {
+      "type": "array",
+      "description": "Product codes of the components that cap max_buildable. Empty when nothing is limiting.",
+      "items": { "type": "string" }
+    },
+
+    "components": {
+      "type": "array",
+      "description": "One entry per component line produced by exploding the bill of materials. Kit (phantom) sub-assemblies are expanded; components that have their own manufacturing bill of materials are listed as components, not expanded.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "product_code", "product_name", "level", "uom",
+          "required_qty", "on_hand_qty", "reserved_qty", "available_qty",
+          "shortage_qty", "is_limiting"
+        ],
+        "properties": {
+          "product_code": { "type": "string" },
+          "product_name": { "type": "string" },
+          "product_id": { "type": "integer" },
+          "level": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Depth in the exploded bill of materials. 1 is a direct component of the requested product."
+          },
+          "uom": { "type": "string" },
+
+          "required_qty": {
+            "type": "number",
+            "description": "Total needed to build the full requested quantity."
+          },
+          "required_per_unit": {
+            "type": "number",
+            "description": "Needed per single unit of the finished product."
+          },
+
+          "on_hand_qty": {
+            "type": "number",
+            "description": "Physically present (stock.quant.quantity), including stock already reserved for other work."
+          },
+          "reserved_qty": {
+            "type": "number",
+            "description": "Already committed to other transfers or manufacturing orders (stock.quant.reserved_quantity)."
+          },
+          "available_qty": {
+            "type": "number",
+            "minimum": 0,
+            "description": "on_hand_qty minus reserved_qty, floored at zero. This is the number that actually decides whether you can build."
+          },
+
+          "shortage_qty": {
+            "type": "number",
+            "minimum": 0,
+            "description": "How much more is needed beyond available_qty. Zero when the component is covered."
+          },
+          "max_buildable_from_this": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Finished-product quantity this single component's free stock supports."
+          },
+
+          "tracking": {
+            "type": "string",
+            "enum": ["none", "lot", "serial"],
+            "description": "Whether this component is tracked by lot or serial number. Relevant because a shortage in a tracked component may still block even when totals look sufficient."
+          },
+          "is_limiting": {
+            "type": "boolean",
+            "description": "True when this component is one of those capping max_buildable."
+          },
+          "has_own_bom": {
+            "type": "boolean",
+            "description": "True when this component could itself be manufactured rather than purchased."
+          },
+
+          "locations": {
+            "type": "array",
+            "description": "Where the free stock sits. Useful when the total is sufficient but scattered across warehouses.",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["location", "available_qty"],
+              "properties": {
+                "location": { "type": "string" },
+                "location_id": { "type": "integer" },
+                "on_hand_qty": { "type": "number" },
+                "reserved_qty": { "type": "number" },
+                "available_qty": { "type": "number" }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "notes": {
+      "type": "array",
+      "description": "Plain-language remarks about how this particular answer was reached.",
+      "items": { "type": "string" }
+    },
+
+    "limitations": {
+      "type": "array",
+      "description": "What this answer deliberately does NOT account for. Always populated. Present it to the user rather than hiding it - an agent that omits these turns a snapshot into a promise.",
+      "items": { "type": "string" }
+    },
+
+    "error": {
+      "type": ["object", "null"],
+      "description": "Set when verdict is 'blocked' for a reason other than stock, for example no bill of materials was found.",
+      "additionalProperties": false,
+      "required": ["code", "message"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "product_not_found",
+            "ambiguous_product",
+            "no_bom",
+            "inactive_bom",
+            "warehouse_not_found",
+            "invalid_quantity",
+            "incompatible_uom",
+            "bom_recursion"
+          ]
+        },
+        "message": { "type": "string" }
+      }
+    }
+  }
+}

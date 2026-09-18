@@ -1,0 +1,120 @@
+<section class="mcp-listing">
+<style>
+.mcp-listing{font-family:-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1d2422;line-height:1.6;max-width:980px;margin:0 auto;padding:0 16px 48px}
+.mcp-listing h1{font-size:40px;line-height:1.1;margin:0 0 16px;letter-spacing:-.01em;font-weight:700}
+.mcp-listing h2{font-size:26px;line-height:1.2;margin:48px 0 14px;font-weight:650;border-top:2px solid #16201e;padding-top:18px}
+.mcp-listing h3{font-size:18px;margin:26px 0 6px;font-weight:650}
+.mcp-listing p{margin:0 0 14px;max-width:70ch}
+.mcp-listing .lead{font-size:20px;color:#3d4749;max-width:62ch}
+.mcp-listing .hero{background:#16201e;color:#e9eeec;border-radius:14px;padding:34px 34px 30px;margin:0 0 10px}
+.mcp-listing .hero h1{color:#fff}
+.mcp-listing .hero p{color:#c2ccc9;max-width:60ch;margin-bottom:0}
+.mcp-listing .hero strong{color:#4fbf97}
+.mcp-listing table{border-collapse:collapse;width:100%;margin:18px 0;font-size:15px}
+.mcp-listing th{text-align:left;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#5a6467;border-bottom:2px solid #a9b4b2;padding:9px 12px;font-weight:600}
+.mcp-listing td{border-bottom:1px solid #d3dad9;padding:10px 12px;vertical-align:top}
+.mcp-listing td code{background:#eef2f1;padding:2px 6px;border-radius:4px;font-size:13px;white-space:nowrap}
+.mcp-listing .callout{border-left:4px solid #1f7a5c;background:#f3f8f6;padding:18px 22px;margin:22px 0;border-radius:0 8px 8px 0}
+.mcp-listing .callout p:last-child{margin-bottom:0}
+.mcp-listing .warn{border-left-color:#a8700f;background:#fdf8ee}
+.mcp-listing pre{background:#16201e;color:#e9eeec;padding:16px 18px;border-radius:8px;overflow-x:auto;font-size:13px;line-height:1.5;margin:14px 0}
+.mcp-listing ul{margin:0 0 14px;padding-left:22px;max-width:70ch}
+.mcp-listing li{margin-bottom:7px}
+.mcp-listing .flow{display:flex;flex-wrap:wrap;align-items:stretch;gap:10px;margin:22px 0}
+.mcp-listing .step{flex:1 1 170px;border:1px solid #d3dad9;border-radius:10px;padding:14px 16px}
+.mcp-listing .step .n{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#5a6467;display:block;margin-bottom:5px}
+.mcp-listing .step strong{display:block;margin-bottom:4px}
+.mcp-listing .step p{font-size:14px;color:#3d4749;margin:0}
+.mcp-listing .step.blocked{border-color:#c8322a;background:#fdf4f3}
+.mcp-listing .step.gate{border-color:#1f7a5c;background:#f3f8f6}
+</style>
+
+<div class="hero">
+  <h1>AI agents propose. People decide.</h1>
+  <p>Assistants are starting to create orders and move stock inside Odoo. This module answers the question that follows: <strong>who approved that</strong> &mdash; by making sure the agent never wrote it in the first place.</p>
+</div>
+
+<h2>Not write-then-undo. Never wrote.</h2>
+
+<p class="lead">Tools that record what an agent changed, and offer to roll it back, assume rollback is a remedy. Once a lot has shipped, it is not.</p>
+
+<p>Here a sensitive action produces a <strong>proposal</strong>. The agent has no write rights on any business model, so the proposal is the most it can do. A person turns it into a real document, under their own access rights.</p>
+
+<div class="flow">
+  <div class="step">
+    <span class="n">Step 1</span>
+    <strong>Agent asks</strong>
+    <p>A tool validates the request and creates a proposal. It carries a plain-language summary written from validated data, not free text from the model.</p>
+  </div>
+  <div class="step blocked">
+    <span class="n">Step 2</span>
+    <strong>Nothing happens yet</strong>
+    <p>No manufacturing order, no stock move, no product. Only a proposal row waiting for review.</p>
+  </div>
+  <div class="step gate">
+    <span class="n">Step 3</span>
+    <strong>A person decides</strong>
+    <p>Approve and it becomes a real document, created under the reviewer's own rights. Reject and it stays a record of what was asked.</p>
+  </div>
+</div>
+
+<h2>What stops this from being decoration</h2>
+
+<table>
+  <tr><th>Rule</th><th>Why it is there</th></tr>
+  <tr>
+    <td><strong>Separation of duties</strong></td>
+    <td>Whoever a proposal was requested for cannot approve it, and the agent identity can never approve anything. Without this, an agent running inside someone's session would request and approve in one breath and no human would appear in the loop.</td>
+  </tr>
+  <tr>
+    <td><strong>Applied as the reviewer</strong></td>
+    <td>There is no <code>sudo()</code> in the apply path. A reviewer who may not create a manufacturing order by hand does not create one by approving either.</td>
+  </tr>
+  <tr>
+    <td><strong>Validated on arrival</strong></td>
+    <td>An archived bill of materials, a zero quantity, a missing warehouse: refused when the proposal is made. A reviewer is never shown something that would fail on approval.</td>
+  </tr>
+  <tr>
+    <td><strong>Proposals expire</strong></td>
+    <td>Stock moves. A four-hour-old &ldquo;this is buildable&rdquo; is not a fact any more, so an unreviewed proposal goes stale rather than becoming a stale order.</td>
+  </tr>
+</table>
+
+<h2>An audit log that records what was read</h2>
+
+<p>Every tool call is logged, including read-only ones, in an append-only table: tool, arguments, duration, outcome, which session, on whose behalf.</p>
+
+<p>Products that log only writes cannot answer the question an auditor actually asks &mdash; <em>what did the agent look at before it suggested that?</em> A proposal is only as defensible as the evidence behind it.</p>
+
+<pre>shortage_check           16 ms   ok
+bom_explode              32 ms   ok
+stock_status             16 ms   ok
+production_order_status  30 ms   ok</pre>
+
+<h2>What you get</h2>
+
+<ul>
+  <li><strong>Proposal records</strong> for manufacturing orders, with hooks for sales, purchase, inventory adjustments and product revisions.</li>
+  <li><strong>An approval queue</strong> with approve, reject with reason, and apply as separate auditable events.</li>
+  <li><strong>An append-only tool-call log</strong> covering reads as well as writes.</li>
+  <li><strong>Group and record rules</strong> that keep one agent's proposals invisible to another.</li>
+  <li><strong>Extension points</strong>: add a proposal type by supplying a validator and an applier; the dispatch code does not change.</li>
+</ul>
+
+<div class="callout">
+  <p><strong>Requires Manufacturing MCP Tools</strong>, which is free and provides the agent identity, its read-only rights and the eight tools this governs.</p>
+</div>
+
+<div class="warn callout">
+  <p><strong>Honest limit.</strong> The log is tamper-evident for application users, not tamper-proof against someone with database server access &mdash; a superuser bypasses Odoo access control entirely. Treat it as an audit trail, not as a vault.</p>
+</div>
+
+<h2>Requirements</h2>
+
+<ul>
+  <li>Odoo 19.0, Community or Enterprise</li>
+  <li><code>mrp</code>, <code>stock</code>, <code>mail</code></li>
+  <li>Manufacturing MCP Tools</li>
+</ul>
+
+</section>

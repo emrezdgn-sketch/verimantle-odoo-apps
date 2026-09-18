@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Odoo 19 declares group categories through res.groups.privilege
+             and res.groups.privilege_id; the older category_id on res.groups
+             no longer exists. -->
+        <!-- base.module_category_supply_chain is the category mrp and stock
+             themselves use. Do not point this at a category named after this
+             module's own manifest "category" string: Odoo auto-creates one
+             from that text, so the reference would resolve only for as long
+             as nobody edits the manifest - which is how this line broke once
+             already. -->
+        <record id="res_groups_privilege_mcp" model="res.groups.privilege">
+            <field name="name">AI Agent Governance</field>
+            <field name="category_id" ref="base.module_category_supply_chain"/>
+            <field name="sequence">40</field>
+        </record>
+
+        <!-- The technical identity the MCP layer connects as.
+             It lives here, in the free tools module, because the tools are
+             what it exists to run. The governance module adds the human
+             groups that review what it proposes.
+
+             Its rights are granted one model at a time in
+             ir.model.access.csv, read-only in every case. It is never given
+             mrp.group_mrp_user or stock.group_stock_user: those carry write
+             and create, and the whole claim of this product is that a bug in
+             the agent layer cannot change a business record because Odoo's
+             own access control will not let it. -->
+        <record id="group_mcp_agent" model="res.groups">
+            <field name="name">MCP Agent (technical)</field>
+            <field name="privilege_id" ref="res_groups_privilege_mcp"/>
+            <field name="comment">Read-only identity for AI agents connecting over MCP. Never assign this to a person, and never add write rights to it.</field>
+        </record>
+
+    </data>
+</odoo>
